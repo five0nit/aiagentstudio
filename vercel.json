@@ -1,0 +1,69 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "buildCommand": "npm run build",
+        "outputDirectory": "dist"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "^/api/.*",
+      "headers": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "X-Requested-With, Content-Type, Accept, Authorization"
+      },
+      "continue": true
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/.*",
+      "dest": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://*.vercel.app https://api.openai.com https://api.anthropic.com https://api.mistral.ai;"
+        }
+      ]
+    }
+  ],
+  "env": {
+    "VITE_API_URL": "VITE_API_URL",
+    "VITE_API_KEY": "VITE_API_KEY",
+    "VITE_OPENAI_API_KEY": "VITE_OPENAI_API_KEY",
+    "VITE_ANTHROPIC_API_KEY": "VITE_ANTHROPIC_API_KEY",
+    "VITE_GOOGLE_AI_API_KEY": "VITE_GOOGLE_AI_API_KEY",
+    "VITE_MISTRAL_API_KEY": "VITE_MISTRAL_API_KEY",
+    "VITE_SLACK_CLIENT_ID": "VITE_SLACK_CLIENT_ID",
+    "VITE_TEAMS_CLIENT_ID": "VITE_TEAMS_CLIENT_ID",
+    "VITE_SENTRY_DSN": "VITE_SENTRY_DSN"
+  }
+}
